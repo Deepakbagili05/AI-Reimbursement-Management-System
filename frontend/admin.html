@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>Admin Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f5f7fb;
+    padding:40px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+}
+
+.header{
+    margin-bottom:30px;
+}
+
+.header h1{
+    color:#1a73e8;
+}
+
+.card{
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+}
+
+.request{
+    background:#f8f9fa;
+    border-radius:15px;
+    padding:20px;
+    margin-bottom:15px;
+    border-left:5px solid #1a73e8;
+}
+
+.btn{
+    border:none;
+    padding:10px 18px;
+    border-radius:10px;
+    color:white;
+    cursor:pointer;
+    margin-right:10px;
+    margin-top:10px;
+}
+
+.approve{
+    background:#34a853;
+}
+
+.reject{
+    background:#ea4335;
+}
+
+.load{
+    background:#1a73e8;
+    margin-bottom:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+
+<h1>Admin Dashboard</h1>
+
+<p>
+Manage reimbursement requests
+</p>
+
+<div class="card">
+
+<button
+class="btn load"
+onclick="loadRequests()">
+Load Requests
+</button>
+
+<a
+href="http://127.0.0.1:5000/generate-report"
+target="_blank">
+
+<button
+class="btn load">
+
+Download PDF Report
+
+</button>
+
+</a>
+
+<div id="requests"></div>
+
+</div>
+</div>
+
+<script>
+
+async function loadRequests(){
+
+    const response =
+    await fetch(
+    "http://127.0.0.1:5000/reimbursements"
+    );
+
+    const data =
+    await response.json();
+
+    let html = "";
+
+    data.forEach(item => {
+
+        html += `
+
+        <div class="request">
+
+        <h3>
+        Request #${item.id}
+        </h3>
+
+        <p>
+        Amount:
+        ₹${item.expense_amount}
+        </p>
+
+        <p>
+        Category:
+        ${item.category}
+        </p>
+
+        <p>
+        Description:
+        ${item.description}
+        </p>
+
+        <p>
+
+        📄
+        <a
+        href="http://127.0.0.1:5000/uploads/${item.bill_file}"
+        target="_blank">
+
+        View Uploaded Bill
+
+        </a>
+
+        </p>
+
+        <p>
+        Status:
+        <b>${item.status}</b>
+        </p>
+
+        <button
+        class="btn approve"
+        onclick="approveRequest(${item.id})">
+        Approve
+        </button>
+
+        <button
+        class="btn reject"
+        onclick="rejectRequest(${item.id})">
+        Reject
+        </button>
+
+        </div>
+
+        `;
+    });
+
+    document.getElementById(
+    "requests"
+    ).innerHTML = html;
+}
+
+async function approveRequest(id){
+
+    const response =
+    await fetch(
+    "http://127.0.0.1:5000/approve/" + id,
+    {
+        method:"POST"
+    });
+
+    const data =
+    await response.json();
+
+    alert(data.message);
+
+    loadRequests();
+}
+
+async function rejectRequest(id){
+
+    const response =
+    await fetch(
+    "http://127.0.0.1:5000/reject/" + id,
+    {
+        method:"POST"
+    });
+
+    const data =
+    await response.json();
+
+    alert(data.message);
+
+    loadRequests();
+}
+
+</script>
+
+</body>
+
+</html>

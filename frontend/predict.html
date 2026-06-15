@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>ML Prediction</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f5f7fb;
+    padding:40px;
+}
+
+.container{
+    max-width:700px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 5px 25px rgba(0,0,0,0.1);
+}
+
+h1{
+    color:#1a73e8;
+    margin-bottom:20px;
+}
+
+input,
+select{
+    width:100%;
+    padding:12px;
+    margin-bottom:15px;
+    border:1px solid #ddd;
+    border-radius:10px;
+}
+
+button{
+    width:100%;
+    background:#1a73e8;
+    color:white;
+    border:none;
+    padding:12px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+button:hover{
+    background:#1558b0;
+}
+
+.result{
+    margin-top:20px;
+    background:#f8f9fa;
+    padding:15px;
+    border-radius:10px;
+    font-weight:600;
+}
+label{
+    display:block;
+    margin-bottom:5px;
+    font-weight:500;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<h1>AI Prediction Dashboard</h1>
+
+<input
+type="number"
+id="amount"
+placeholder="Expense Amount">
+
+<label>
+Expense Category
+</label>
+
+<select id="category">
+
+<option value="1">
+Travel
+</option>
+
+<option value="2">
+Food
+</option>
+
+<option value="3">
+Fuel
+</option>
+
+<option value="4">
+Accommodation
+</option>
+
+<option value="5">
+Office Supplies
+</option>
+
+</select>
+<label>
+Expense Amount
+</label>
+
+<label>
+Submission Day
+</label>
+
+<input
+type="number"
+id="day"
+placeholder="Enter Day">
+
+<label>
+Employee History Score
+</label>
+
+<input
+type="number"
+id="score"
+placeholder="1 - 100">
+
+<label>
+Bill Uploaded
+</label>
+
+<select id="bill">
+
+<option value="1">
+Yes
+</option>
+
+<option value="0">
+No
+</option>
+
+</select>
+
+<button onclick="predict()">
+Predict Approval
+</button>
+
+<div
+id="result"
+class="result">
+Prediction Result
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+async function predict(){
+
+    const response =
+    await fetch(
+    "http://127.0.0.1:5000/predict",
+    {
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+
+            expense_amount:
+            document.getElementById("amount").value,
+
+            category:
+            document.getElementById("category").value,
+
+            submission_day:
+            document.getElementById("day").value,
+
+            history_score:
+            document.getElementById("score").value,
+
+            bill_available:
+            document.getElementById("bill").value
+        })
+    });
+
+    const data =
+    await response.json();
+
+    let resultText = "";
+
+    if(data.prediction == 1){
+
+        resultText =
+        `
+        <h3>✅ Likely Approved</h3>
+        <p>
+        Confidence:
+        ${data.confidence}%
+        </p>
+        `;
+
+    }
+    else{
+
+        resultText =
+        `
+        <h3>⚠️ High Rejection Risk</h3>
+        <p>
+        Confidence:
+        ${data.confidence}%
+        </p>
+        `;
+
+    }
+
+    document.getElementById(
+    "result"
+    ).innerHTML =
+    resultText;
+}
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>AI Summary Generator</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f5f7fb;
+    padding:40px;
+}
+
+.container{
+    max-width:800px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 5px 25px rgba(0,0,0,0.1);
+}
+
+h1{
+    color:#1a73e8;
+    margin-bottom:20px;
+}
+
+input,
+textarea{
+    width:100%;
+    padding:12px;
+    margin-bottom:15px;
+    border:1px solid #ddd;
+    border-radius:10px;
+}
+
+button{
+    width:100%;
+    background:#1a73e8;
+    color:white;
+    border:none;
+    padding:12px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+button:hover{
+    background:#1558b0;
+}
+
+.result{
+    margin-top:20px;
+    background:#f8f9fa;
+    padding:20px;
+    border-radius:15px;
+    white-space:pre-wrap;
+    border-left:5px solid #1a73e8;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<h1>AI Expense Summary</h1>
+
+<input
+type="number"
+id="amount"
+placeholder="Expense Amount">
+
+<input
+type="text"
+id="category"
+placeholder="Category">
+
+<textarea
+id="description"
+rows="5"
+placeholder="Expense Description">
+</textarea>
+
+<button onclick="generateSummary()">
+Generate AI Summary
+</button>
+
+<div
+id="result"
+class="result">
+
+Summary will appear here...
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+async function generateSummary(){
+
+    const response =
+    await fetch(
+    "http://127.0.0.1:5000/summary",
+    {
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+
+            amount:
+            document.getElementById("amount").value,
+
+            category:
+            document.getElementById("category").value,
+
+            description:
+            document.getElementById("description").value
+        })
+    });
+
+    const data =
+    await response.json();
+
+    document.getElementById(
+    "result"
+    ).innerHTML =
+    data.summary;
+}
+
+</script>
+
+</body>
+
+</html>

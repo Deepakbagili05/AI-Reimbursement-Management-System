@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>Reimbursement History</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f5f7fb;
+    padding:40px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+}
+
+.header{
+    margin-bottom:30px;
+}
+
+.header h1{
+    color:#1a73e8;
+}
+
+.card{
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+}
+
+.btn{
+    background:#1a73e8;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    margin-bottom:20px;
+}
+
+.request{
+    background:#f8f9fa;
+    border-radius:15px;
+    padding:15px;
+    margin-bottom:15px;
+    border-left:5px solid #1a73e8;
+}
+
+.status{
+    font-weight:bold;
+}
+#search{
+    width:100%;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    margin-bottom:15px;
+}
+#statusFilter{
+    width:100%;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    margin-bottom:15px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+
+<h1>My Reimbursement History</h1>
+
+<p>Track all your reimbursement requests</p>
+
+</div>
+
+<div class="card">
+<select
+id="statusFilter"
+onchange="filterHistory()">
+
+<option value="">
+All Statuses
+</option>
+
+<option value="Pending">
+Pending
+</option>
+
+<option value="Approved">
+Approved
+</option>
+
+<option value="Rejected">
+Rejected
+</option>
+
+</select>
+
+<br><br>
+
+<br><br>
+<button
+class="btn"
+onclick="loadHistory()">
+Load History </button>
+
+<div id="result"></div>
+
+</div>
+
+</div>
+
+<script>
+let historyData = [];
+
+async function loadHistory(){
+
+    const response =
+    await fetch(
+    "http://127.0.0.1:5000/history/" +
+    localStorage.getItem("user_id")
+    );
+
+    const data =
+    await response.json();
+
+    historyData = data;
+
+    renderHistory(data);
+}
+
+function renderHistory(data){
+
+    let html = "";
+
+    data.forEach(item => {
+
+        html += `
+        <div class="request">
+
+        <h3>
+        Request #${item.id}
+        </h3>
+
+        <p>
+        Amount:
+        ₹${item.expense_amount}
+        </p>
+
+        <p>
+        Category:
+        ${item.category}
+        </p>
+
+        <p>
+        Description:
+        ${item.description}
+        </p>
+
+       ${item.bill_file ?
+
+       `
+       <p>
+
+       📄
+       <a
+       href="http://127.0.0.1:5000/uploads/${item.bill_file}"
+       target="_blank">
+
+       View Uploaded Bill
+
+       </a>
+
+       </p>
+       `
+
+       :
+
+       `
+       <p>
+       No Bill Uploaded
+       </p>
+       `
+       }
+
+        <p class="status">
+        Status:
+        ${item.status}
+        </p>
+ 
+        </div>
+        `;
+    });
+
+    document.getElementById(
+    "result"
+    ).innerHTML = html;
+}
+
+function filterHistory(){
+
+    const keyword =
+    document.getElementById(
+    "search"
+    ).value.toLowerCase();
+
+    const status =
+    document.getElementById(
+    "statusFilter"
+    ).value;
+
+    const filtered =
+    historyData.filter(item => {
+
+        const categoryMatch =
+        item.category
+        .toLowerCase()
+        .includes(keyword);
+
+        const statusMatch =
+
+        status === "" ||
+
+        item.status === status;
+
+        return (
+            categoryMatch &&
+            statusMatch
+        );
+    });
+
+    renderHistory(filtered);
+}
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>Login</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f5f7fb;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.card{
+    background:white;
+    width:400px;
+    padding:40px;
+    border-radius:20px;
+    box-shadow:0 5px 25px rgba(0,0,0,0.1);
+}
+
+.logo{
+    text-align:center;
+    color:#1a73e8;
+    font-size:32px;
+    font-weight:600;
+    margin-bottom:20px;
+}
+
+h2{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.input-group{
+    margin-bottom:20px;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-size:15px;
+}
+
+button{
+    width:100%;
+    background:#1a73e8;
+    color:white;
+    border:none;
+    padding:12px;
+    border-radius:10px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#1558b0;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<div class="logo">
+AI RMS
+</div>
+
+<h2>Employee Login</h2>
+
+<div class="input-group">
+<input
+type="email"
+id="email"
+placeholder="Enter Email">
+</div>
+
+<div class="input-group">
+<input
+type="password"
+id="password"
+placeholder="Enter Password">
+</div>
+
+<button onclick="loginUser()">
+Login
+</button>
+
+</div>
+
+<script>
+
+async function loginUser(){
+
+    const response =
+    await fetch(
+    "http://127.0.0.1:5000/login",
+    {
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+
+            email:
+            document.getElementById(
+            "email").value,
+
+            password:
+            document.getElementById(
+            "password").value
+        })
+    });
+
+    const data =
+    await response.json();
+    localStorage.setItem(
+        "user_id",
+        data.user_id
+    );
+
+    if(data.role=="admin"){
+
+    window.location.href =
+    "admin.html";
+
+    }
+    else{
+
+    window.location.href =
+    "employee_dashboard.html";
+
+}
+
+    if(data.message ==
+       "Login Successful"){
+
+        window.location.href =
+        "dashboard.html";
+    }
+}
+
+</script>
+
+</body>
+
+</html>

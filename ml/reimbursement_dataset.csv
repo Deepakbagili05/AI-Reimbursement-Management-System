@@ -1,0 +1,13 @@
+expense_amount,category,submission_day,history_score,bill_available,status
+5000,Travel,1,95,1,Approved
+7000,Food,2,90,1,Approved
+10000,Medical,3,85,1,Approved
+15000,Travel,4,70,1,Review
+18000,Travel,5,50,0,Rejected
+25000,Other,6,30,0,Rejected
+3000,Food,1,98,1,Approved
+12000,Medical,2,75,1,Review
+22000,Other,4,40,0,Rejected
+8000,Food,3,92,1,Approved
+6000,Travel,2,88,1,Approved
+17000,Medical,5,60,0,Rejected

@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environment
+venv/
+env/
+
+# Environment Variables
+.env
+
+# Database Files
+*.db
+*.sqlite3
+
+# Uploaded Bills
+backend/uploads/*
+
+# ML Files (optional)
+# Uncomment if model is large
+# ml/*.pkl
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary Files
+temp/
+tmp/
+
+# PDF Reports
+*.pdf
+
+# Build Files
+dist/
+build/
+
+# Render
+.render/
