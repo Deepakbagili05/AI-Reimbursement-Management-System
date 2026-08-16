@@ -134,6 +134,11 @@ def submit_reimbursement():
             bill.filename
         )
 
+        os.makedirs(
+            app.config["UPLOAD_FOLDER"],
+            exist_ok=True
+        )
+
         bill.save(
             os.path.join(
                 app.config["UPLOAD_FOLDER"],
