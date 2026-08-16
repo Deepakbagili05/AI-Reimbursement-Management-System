@@ -131,14 +131,23 @@ Load History </button>
 </div>
 
 <script>
+
 let historyData = [];
 
 async function loadHistory(){
 
+    const userId =
+    localStorage.getItem("user_id");
+
+    console.log(
+        "User ID:",
+        userId
+    );
+
     const response =
     await fetch(
     "http://127.0.0.1:5000/history/" +
-    localStorage.getItem("user_id")
+    userId
     );
 
     const data =
@@ -156,6 +165,7 @@ function renderHistory(data){
     data.forEach(item => {
 
         html += `
+
         <div class="request">
 
         <h3>
@@ -177,38 +187,43 @@ function renderHistory(data){
         ${item.description}
         </p>
 
-       ${item.bill_file ?
+        ${
+        item.bill_file ?
 
-       `
-       <p>
+        `
+        <p>
 
-       📄
-       <a
-       href="http://127.0.0.1:5000/uploads/${item.bill_file}"
-       target="_blank">
+        📄
 
-       View Uploaded Bill
+        <a
+        href="http://127.0.0.1:5000/uploads/${item.bill_file}"
+        target="_blank">
 
-       </a>
+        View Uploaded Bill
 
-       </p>
-       `
+        </a>
 
-       :
+        </p>
+        `
 
-       `
-       <p>
-       No Bill Uploaded
-       </p>
-       `
-       }
+        :
+
+        `
+        <p>
+        No Bill Uploaded
+        </p>
+        `
+        }
 
         <p class="status">
+
         Status:
         ${item.status}
+
         </p>
- 
+
         </div>
+
         `;
     });
 
@@ -219,11 +234,6 @@ function renderHistory(data){
 
 function filterHistory(){
 
-    const keyword =
-    document.getElementById(
-    "search"
-    ).value.toLowerCase();
-
     const status =
     document.getElementById(
     "statusFilter"
@@ -232,25 +242,21 @@ function filterHistory(){
     const filtered =
     historyData.filter(item => {
 
-        const categoryMatch =
-        item.category
-        .toLowerCase()
-        .includes(keyword);
-
-        const statusMatch =
-
-        status === "" ||
-
-        item.status === status;
-
         return (
-            categoryMatch &&
-            statusMatch
+
+            status === ""
+
+            ||
+
+            item.status === status
+
         );
+
     });
 
     renderHistory(filtered);
 }
+
 </script>
 
 </body>
