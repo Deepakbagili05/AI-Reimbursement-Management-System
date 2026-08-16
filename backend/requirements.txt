@@ -51,3 +51,4 @@ urllib3==2.7.0
 Werkzeug==3.1.8
 gunicorn
 reportlab
+mysql-connector-python
