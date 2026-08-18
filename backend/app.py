@@ -126,6 +126,25 @@ def submit_reimbursement():
 
     bill = request.files.get("bill")
 
+    # Convert category name to number
+    category_map = {
+        "Travel": 1,
+        "Food": 2,
+        "Medical": 3,
+        "Accommodation": 4,
+        "Other": 5
+    }
+
+    if category in category_map:
+        category = category_map[category]
+    else:
+        try:
+            category = int(category)
+        except ValueError:
+            return jsonify({
+                "message": "Invalid category"
+            }), 400
+
     filename = ""
 
     if bill:
@@ -176,6 +195,8 @@ def submit_reimbursement():
     )
 
     connection.commit()
+
+    cursor.close()
 
     return jsonify({
         "message": "Reimbursement Submitted Successfully"
