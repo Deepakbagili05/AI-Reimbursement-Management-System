@@ -82,7 +82,7 @@ def login():
     email = data["email"]
     password = data["password"]
 
-    cursor = connection.cursor()
+    cursor = connection.cursor(dictionary=True)
 
     sql = """
     SELECT *
