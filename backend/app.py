@@ -30,6 +30,8 @@ print("Upload Folder:", app.config["UPLOAD_FOLDER"])
 model = joblib.load(
     "../ml/reimbursement_model.pkl"
 )
+
+
 # ----------------------------
 # Home API
 # ----------------------------
@@ -109,6 +111,7 @@ def login():
     return jsonify({
         "message": "Invalid Credentials"
     })
+
 
 # ----------------------------
 # Submit Reimbursement API
@@ -201,6 +204,8 @@ def submit_reimbursement():
     return jsonify({
         "message": "Reimbursement Submitted Successfully"
     })
+
+
 # ----------------------------
 # View Uploaded Bill
 # ----------------------------
@@ -210,7 +215,8 @@ def uploaded_file(filename):
     return send_from_directory(
         app.config["UPLOAD_FOLDER"],
         filename
-    )    
+    )
+
 
 # ----------------------------
 # View Reimbursements API
@@ -218,7 +224,8 @@ def uploaded_file(filename):
 @app.route("/reimbursements", methods=["GET"])
 def get_reimbursements():
 
-    cursor = connection.cursor()
+    # CHANGED: dictionary=True
+    cursor = connection.cursor(dictionary=True)
 
     sql = """
     SELECT *
@@ -228,6 +235,8 @@ def get_reimbursements():
     cursor.execute(sql)
 
     data = cursor.fetchall()
+
+    cursor.close()
 
     return jsonify(data)
 
@@ -252,6 +261,7 @@ def history(user_id):
 
     return jsonify(data)
 
+
 # ----------------------------
 # Approve Reimbursement
 # ----------------------------
@@ -272,7 +282,9 @@ def approve(id):
     return jsonify({
         "message": "Approved Successfully"
     })
-    # ----------------------------
+
+
+# ----------------------------
 # Reject Reimbursement
 # ----------------------------
 @app.route("/reject/<int:id>", methods=["POST"])
@@ -292,9 +304,9 @@ def reject(id):
     return jsonify({
         "message": "Rejected Successfully"
     })
-    
-    
-    # ----------------------------
+
+
+# ----------------------------
 # ML Prediction API
 # ----------------------------
 @app.route("/predict", methods=["POST"])
@@ -337,7 +349,8 @@ def predict():
         "prediction": int(prediction[0]),
         "confidence": confidence
     })
-    
+
+
 # ----------------------------
 # AI Summary API
 # ----------------------------
@@ -359,6 +372,8 @@ def summary():
     return jsonify({
         "summary": result
     })
+
+
 # ----------------------------
 # Employee Dashboard API
 # ----------------------------
@@ -368,9 +383,8 @@ def summary():
 )
 def employee_dashboard(user_id):
 
-    cursor = connection.cursor()
+    cursor = connection.cursor(dictionary=True)
 
-    # Total Claims
     cursor.execute(
         """
         SELECT COUNT(*) AS total
@@ -382,7 +396,6 @@ def employee_dashboard(user_id):
 
     total = cursor.fetchone()["total"]
 
-    # Approved
     cursor.execute(
         """
         SELECT COUNT(*) AS approved
@@ -395,7 +408,6 @@ def employee_dashboard(user_id):
 
     approved = cursor.fetchone()["approved"]
 
-    # Pending
     cursor.execute(
         """
         SELECT COUNT(*) AS pending
@@ -408,7 +420,6 @@ def employee_dashboard(user_id):
 
     pending = cursor.fetchone()["pending"]
 
-    # Rejected
     cursor.execute(
         """
         SELECT COUNT(*) AS rejected
@@ -427,6 +438,8 @@ def employee_dashboard(user_id):
         "pending": pending,
         "rejected": rejected
     })
+
+
 # ----------------------------
 # Admin Dashboard Statistics
 # ----------------------------
@@ -436,7 +449,7 @@ def employee_dashboard(user_id):
 )
 def admin_stats():
 
-    cursor = connection.cursor()
+    cursor = connection.cursor(dictionary=True)
 
     cursor.execute(
         """
@@ -445,7 +458,7 @@ def admin_stats():
         """
     )
 
-    total =cursor.fetchone()["total"]
+    total = cursor.fetchone()["total"]
 
     cursor.execute(
         """
@@ -455,7 +468,7 @@ def admin_stats():
         """
     )
 
-    approved =cursor.fetchone()["approved"]
+    approved = cursor.fetchone()["approved"]
 
     cursor.execute(
         """
@@ -465,7 +478,7 @@ def admin_stats():
         """
     )
 
-    pending =cursor.fetchone()["pending"]
+    pending = cursor.fetchone()["pending"]
 
     cursor.execute(
         """
@@ -475,15 +488,17 @@ def admin_stats():
         """
     )
 
-    rejected =cursor.fetchone()["rejected"]
+    rejected = cursor.fetchone()["rejected"]
 
     return jsonify({
         "total": total,
         "approved": approved,
         "pending": pending,
         "rejected": rejected
-    })   
-    # ----------------------------
+    })
+
+
+# ----------------------------
 # PDF Report API
 # ----------------------------
 @app.route("/generate-report")
@@ -505,10 +520,10 @@ def generate_report():
     )
 
     content.append(
-        Spacer(1,20)
+        Spacer(1, 20)
     )
 
-    cursor = connection.cursor()
+    cursor = connection.cursor(dictionary=True)
 
     cursor.execute(
         """
@@ -536,7 +551,7 @@ def generate_report():
         )
 
         content.append(
-            Spacer(1,10)
+            Spacer(1, 10)
         )
 
     doc.build(content)
@@ -545,7 +560,9 @@ def generate_report():
         ".",
         pdf_file,
         as_attachment=True
-    ) 
+    )
+
+
 # ----------------------------
 # Run Flask
 # ----------------------------
