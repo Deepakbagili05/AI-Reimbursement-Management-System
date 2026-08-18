@@ -146,7 +146,7 @@ async function loadHistory(){
 
     const response =
     await fetch(
-    "http://127.0.0.1:5000/history/" +
+    "https://ai-reimbursement-management-system.onrender.com/history/" +
     userId
     );
 
@@ -196,7 +196,7 @@ function renderHistory(data){
         📄
 
         <a
-        href="http://127.0.0.1:5000/uploads/${item.bill_file}"
+        href="https://ai-reimbursement-management-system.onrender.com/uploads/${item.bill_file}"
         target="_blank">
 
         View Uploaded Bill

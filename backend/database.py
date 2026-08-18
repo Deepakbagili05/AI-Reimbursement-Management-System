@@ -4,27 +4,20 @@ import mysql.connector
 connection = None
 
 try:
-    host = os.getenv("MYSQL_HOST")
-    port = int(os.getenv("MYSQL_PORT", "19617"))
-    user = os.getenv("MYSQL_USER")
-    password = os.getenv("MYSQL_PASSWORD")
-    database = os.getenv("MYSQL_DB", "defaultdb")
-
-    print("MYSQL_HOST:", host)
-    print("MYSQL_PORT:", port)
-
     connection = mysql.connector.connect(
-        host=host,
-        port=port,
-        user=user,
-        password=password,
-        database=database,
-        ssl_disabled=False
+        host=os.getenv("MYSQL_HOST"),
+        port=int(os.getenv("MYSQL_PORT", "19617")),
+        user=os.getenv("MYSQL_USER"),
+        password=os.getenv("MYSQL_PASSWORD"),
+        database=os.getenv("MYSQL_DB", "defaultdb"),
+        ssl_disabled=False,
+        connection_timeout=15
     )
 
-    print("Database Connected Successfully")
+    if connection.is_connected():
+        print("Database Connected Successfully")
 
-except mysql.connector.Error as e:
+except mysql.connector.Error as err:
     print("Database Connection Failed")
-    print(e)
+    print(err)
     connection = None

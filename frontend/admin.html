@@ -98,7 +98,7 @@ Load Requests
 </button>
 
 <a
-href="http://127.0.0.1:5000/generate-report"
+href="https://ai-reimbursement-management-system.onrender.com/generate-report"
 target="_blank">
 
 <button
@@ -121,7 +121,7 @@ async function loadRequests(){
 
     const response =
     await fetch(
-    "http://127.0.0.1:5000/reimbursements"
+    "https://ai-reimbursement-management-system.onrender.com/reimbursements"
     );
 
     const data =
@@ -158,7 +158,7 @@ async function loadRequests(){
 
         📄
         <a
-        href="http://127.0.0.1:5000/uploads/${item.bill_file}"
+        href="https://ai-reimbursement-management-system.onrender.com/uploads/${item.bill_file}"
         target="_blank">
 
         View Uploaded Bill
@@ -198,7 +198,7 @@ async function approveRequest(id){
 
     const response =
     await fetch(
-    "http://127.0.0.1:5000/approve/" + id,
+    "https://ai-reimbursement-management-system.onrender.com/approve/" + id,
     {
         method:"POST"
     });
@@ -215,7 +215,7 @@ async function rejectRequest(id){
 
     const response =
     await fetch(
-    "http://127.0.0.1:5000/reject/" + id,
+    "https://ai-reimbursement-management-system.onrender.com/reject/" + id,
     {
         method:"POST"
     });

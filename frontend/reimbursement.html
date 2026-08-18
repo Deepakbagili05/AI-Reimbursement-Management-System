@@ -184,7 +184,7 @@ async function generateSummary(){
 
     const response =
     await fetch(
-    "http://127.0.0.1:5000/summary",
+    "https://ai-reimbursement-management-system.onrender.com/summary",
     {
         method:"POST",
 
@@ -259,7 +259,7 @@ if(billFile){
 
 const response =
 await fetch(
-"http://127.0.0.1:5000/submit",
+"https://ai-reimbursement-management-system.onrender.com/submit",
 {
     method:"POST",
     body:formData
